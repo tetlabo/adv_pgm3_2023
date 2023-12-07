@@ -1,0 +1,132 @@
+---
+title: "応用プログラミング3　第3回　R Markdownによるレポート作成"
+subtitle: "ハンズオン用プログラム"
+date: "`r format(Sys.time(),'%Y-%m-%d')`"
+author: 
+    - "ネ学太郎"
+    - "情報次郎"
+output:
+    bookdown::html_document2:
+        toc: true
+        toc_float: true
+        df_print: paged
+    bookdown::word_document2:
+        reference_docx: "./Rmd_word_template.docx"
+        pandoc_args: "--highlight-style=tango"
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = FALSE, dev = "svg")
+```
+
+# 見出しと段落
+
+
+## 見出しレベル1
+
+HTML出力ではタイトルが h1 要素になり、`##` (h2) が第1レベルの見出しになります。
+
+## 見出しレベル2
+
+これは本文です。
+[リンク](https://www.senshu-u.ac.jp/)を参照してください。
+
+![画像](./ancle_sam.png)
+
+
+# 箇条書き
+
+1. 順序付き箇条書き
+1. 番号は自動的に増加する
+    1. サブ項目はタブでインデント
+
+* 順序なし箇条書き
+    * サブ項目はタブで<br>インデント
+
+- 順序なし箇条書き
+
+
+# リンクと画像の挿入
+
+日々のデータは[ダッシュボード](http://www.pref.kanagawa.jp/sys/atom/now/1_3.html)で確認できます。
+
+以下の図は、昨日の分析結果です。
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.align="center"}
+knitr::include_graphics("http://www.pref.kanagawa.jp/sys/atom/jpg/Hp_mp_k03.jpg")
+```
+
+<div align="center">
+<img src="http://www.pref.kanagawa.jp/sys/atom/jpg/Hp_mp_k03m.jpg" alt="分析結果02">
+</div>
+
+グラフは、[川崎市放射線モニタリングポスト測定結果](http://www.pref.kanagawa.jp/sys/atom/now/all.html)より、[殿町局](http://www.pref.kanagawa.jp/sys/atom/now/1_3.html)を参照しています。
+
+なお、画像については、knitrパッケージの `include_graphics()` 関数を使ったほうが、挿入される場所やサイズなど、細かく設定できます。
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.align="center", fig.width=12, fig.cap="川崎市放射線モニタリングポスト 殿町局測定結果"}
+knitr::include_graphics("http://www.pref.kanagawa.jp/sys/atom/jpg/Hp_mp_k03m.jpg")
+```
+
+
+# 表組み
+
+以下に分析結果の集計表を示します。なお、PowerPoint出力では、基本的に表は独立したページに出力したほうが、後で調整がしやすいです。見出しのないページを作成するには、`## {-}` と記述します (`#` の数は見出しのレベル次第)。
+
+|      | ビール | ワイン | 日本酒 | ウイスキー | 合計 |
+| ---: | :-----: | :-----: | :-----: | :---------: | :---: |
+| 男性 | 40     | 15     | 25     | 20         | 100  |
+| 女性 | 15     | 35     | 35     | 15         | 100  |
+|      |        |        |        |            |      |
+
+
+
+# チャンク
+
+結果は乱数のシードが異なるため一致しません。なお、PowerPoint出力では、基本的にチャンクは独立したページに出力したほうが、後で調整がしやすいです。見出しのないページを作成するには、`## {-}` と記述します (`#` の数は見出しのレベル次第)。
+
+```{r eval=TRUE, message=FALSE, warning=FALSE, verbatim=TRUE}
+vec <- rnorm(10)
+mean(vec)
+```
+
+```{python eval=TRUE, message=FALSE, warning=FALSE, verbatim=TRUE}
+import numpy as np
+vec = np.random.randn(10)
+np.mean(vec)
+```
+
+
+# データフレームの出力について
+
+HTML出力の場合は、ヘッダーに `df_print: paged` と記述すると、件数が多いデータフレームを、ボタン操作でページ切り替えして表示する出力が得られます。
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+iris
+```
+
+Word, PowerPointなどについては、それぞれに適した表示でデータフレームを出力するためのパッケージ、関数が提供されています。knitrパッケージの `kable()` 関数では、シンプルな出力結果が得られます。kableExtraパッケージでは、`kable()` 関数の出力を拡張し、より柔軟な設定ができます。また、flextableパッケージは、HTML, Word, PowerPointいずれにおいてもほぼ同じ、整った出力が得られます。
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+library(knitr)
+kable(head(iris, 20))
+
+library(flextable)
+flextable(head(iris, 20))
+```
+
+
+# 参考: グラフィックス
+
+Rで作成したグラフィックスも、そのまま出力されます。なお、PowerPoint出力では、基本的に1枚のスライドには1つのグラフィックスのみ出力するようにしたほうが、後で調整がしやすいです。見出しのないページを作成するには、`## {-}` と記述します (`#` の数は見出しのレベル次第)。
+
+```{r eval=TRUE, message=FALSE, warning=FALSE, fig.cap="図のキャプション"}
+par(family = "IPAexGothic")
+plot(iris[, c("Sepal.Length", "Petal.Length")], main = "散布図")
+```
+
+```{r eval=TRUE, message=FALSE, warning=FALSE, fig.cap="図のキャプション"}
+par(family = "IPAexGothic")
+pairs(iris[, -5], main = "ペアプロット")
+```

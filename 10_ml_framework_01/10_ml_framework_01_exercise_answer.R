@@ -1,0 +1,170 @@
+### 応用プログラミング3
+### 第10回　機械学習フレームワークによる機械学習 (1)
+### 週次課題用プログラム
+### 提出期限: 2022-12-05 23:59:59
+### 
+### 提出者の情報を記述してください
+### 専修大学ネットワーク情報学部
+### 学籍番号: 
+### 氏名: 
+
+
+#--------------------------------------------------------------------#
+# 以下に、問題文の意図を実現するRプログラムを記述してください。
+# Posit Cloud上で実行できることを確認し、提出してください。
+# プログラムの内容について、適宜コメントを記述してください。
+# 1行1行コメントする必要はありませんが、「何をしようとしているか」がわかるように
+# してください。コメントの一切ないプログラムは、評価が下がります。
+#--------------------------------------------------------------------#
+
+# 共通: パッケージの読み込み
+# 以下を実行してください。他に必要なパッケージがあれば適宜読み込んでください。
+library(tidyverse)
+library(tidymodels)
+library(mlr3verse)
+library(rpart.plot)
+library(MASS)
+
+# Q: 機械学習フレームワークを用いた回帰モデルの作成
+#    データ Boston (ボストン地区の不動産価格データ) を読み込み、
+#    それぞれ指示にしたがって適切なモデルを作成し、評価してください。
+#    なお、目的変数は価格 medv です。
+#    Bostonデータセットは、MASSパッケージに付属しています。
+#    https://www.rdocumentation.org/packages/MASS/versions/7.3-58.1/topics/Boston
+
+# Q1: データの確認
+#    Bostonデータは上でMASSライブラリを読み込んでいるので、すでに利用可能です。
+#    データの内容を確認してください。
+
+# Q1-1: Bostonデータの先頭から5行を表示してください。
+#       (特にtidyverseで、といった制約はありません)
+
+head(Boston, 5)
+
+
+# Q1-2: 変数間の関係を、散布図行列 (ペアプロット) を描いて確認してください。
+#       ペアプロットの作成方法は、第2回、第9回の資料で紹介しています。
+
+pairs(Boston)
+
+
+# Q2: 機械学習フレームワークを用いた回帰モデルの作成
+#     今回紹介した、tidymodelsまたはmlr3のいずれか片方を用いて、目的変数を medv、
+#     その他の列を特徴量とした回帰モデルを作成してください。なお、精度を高めるための
+#     前処理などについては、次回の講義で取り上げるので、今回は考慮しなくて構いません。
+#     ※つまり、tidymodelsではrecipesパッケージの step_*() 関数を使う必要はありません。
+
+# Q2-1: データの分割
+#       データを学習用と検証用に分割してください。比率は、学習用8割、検証用2割としてください。
+#       フレームワークによって細かい順番は異なりますので、「上から順に実行したときにエラーなく
+#       動作する」ことを前提として記述してください。
+
+
+# tidymodelsの場合
+# 解答例では2つのフレームワークを両方とも使っているため、変数名を使い分けています。
+
+tm_split <- initial_split(Boston, prop = 0.8)
+
+tm_train <- training(tm_split)
+tm_test <- testing(tm_split)
+
+
+# mlr3の場合
+
+mlr3_task <- as_task_regr(Boston, target = "medv")
+mlr3_split <- partition(mlr3_task, ratio = 0.8)
+
+
+# Q2-2: モデルの設定
+#       前述のとおり、medv を目的変数とした回帰モデルを設定してください。
+#       アルゴリズムは、どちらのフレームワークでも決定木 (rpart) で構いません。
+#       (他のアルゴリズムを使ってみたい方は自由に選んで構いませんが、Posit Cloudで
+#       実行できる "軽い" アルゴリズムにしてください)
+
+
+# tidymodelsの場合
+
+tm_rec <- recipe(medv ~ ., data = tm_train)
+
+tm_model <- decision_tree(mode = "regression", cost_complexity = 0.01) %>% set_engine("rpart")
+
+tm_wflow <- workflow() %>% add_model(tm_model) %>% add_recipe(tm_rec)
+
+
+# mlr3の場合
+
+mlr3_learner <- lrn("regr.rpart")
+mlr3_learner$param_set$values <- list(cp = 0.01, keep_model = TRUE)
+
+
+# Q2-3: モデルの作成
+#       Q2-2で設定したモデルを実行してください。また、モデルの内容 (文字情報) を出力してください。
+
+
+# tidymodelsの場合
+tm_fit <- tm_wflow %>% fit(data = tm_train)
+tm_dt <- tm_fit %>% extract_fit_parsnip()
+tm_dt
+
+# mlr3の場合
+
+mlr3_learner$predict_type = "response"
+mlr3_learner$train(mlr3_task, mlr3_split$train)
+mlr3_learner$model
+
+
+# Q2-4: 決定木の描画
+#       作成した決定木を描画してください。
+#       tidymodelsでの描画については、以下を参考にしてください。
+#       https://stackoverflow.com/a/63533135
+#       ※第9回で紹介したggpartyパッケージで描画することも
+#       可能ではありますが、その場合ここまでに記述したプログラムを
+#       書き換える必要があります。(面倒だと思うので、そこまでしなくても良いです)
+#       ※tidymodelsでもmlr3でも、プログラムを実行すると多少警告 (warning) が
+#       出ますが、エラーではないので問題ありません (描画できないのはエラーです)。
+
+
+# tidymodelsの場合
+rpart.plot(tm_dt$fit)
+
+
+# mlr3の場合
+
+autoplot(mlr3_learner)
+
+
+# Q2-5: モデルに基づく予測
+#       分割して取っておいた検証用データについて、モデルを適用して予測値を
+#       算出してください。また、結果 (予測値) を出力してください。
+#       特に出力する件数などの指定はありません。
+
+
+# tidymodelsの場合
+
+predict(tm_dt, tm_test)
+
+
+# mlr3の場合
+
+mlr3_pred <- mlr3_learner$predict(mlr3_task, mlr3_split$test)
+mlr3_pred$response
+
+
+# Q2-6: 精度評価
+#       作成した回帰モデルの、評価指標を出力してください。
+#       具体的には、決定係数 (R^2) とRMSEを出力してください。
+
+
+# tidymodelsの場合
+tm_aug <- augment(tm_fit, tm_test)
+tm_aug %>% metrics(truth = medv, estimate = .pred)
+
+
+# mlr3の場合
+mlr3_pred$score(c(msr("regr.rsq"), msr("regr.rmse")))
+autoplot(mlr3_pred)
+
+
+#--------------------------------------------------------------------#
+# 作成したプログラムをPosit Cloudからダウンロードし、Google Classroomの
+# 課題ページに提出してください。ファイル名を変更する必要はありません。

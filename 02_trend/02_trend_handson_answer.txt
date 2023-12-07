@@ -1,0 +1,15 @@
+# Q. データフレーム df から、総酸が1未満、精米歩合が20 (%) 以下の条件に
+# 合致する行を抽出してください
+
+df[df[["総酸"]] < 1 & df[["精米歩合"]] <= 20, ] # 適切なプログラムを記述してください
+
+
+
+# Q. 疑似日本酒データを読み込み、「タイプ」別の「容器」の度数を
+# 集計し、棒グラフで表現してください
+
+df <- read.csv("pseudo_sake_data.csv", fileEncoding = "UTF-8") # 疑似日本酒データを読み込む
+
+tbl <- table(df[, c("容器", "タイプ")])  # 「容器」と「タイプ」のクロス集計表を作成してください
+
+barplot(tbl, col = 1:nrow(tbl), legend.text = rownames(tbl), args.legend = list(cex = 0.45, x = "topright")) # 棒グラフを作成してください

@@ -1,0 +1,64 @@
+---
+title: "応用プログラミング3　第3回　R Markdownによるレポート作成"
+subtitle: "週次課題用プログラム"
+author:
+- "専修大学ネットワーク情報学部"
+- "XXX334"
+- "田中健太"
+output:
+    bookdown::word_document2:
+        reference_docx: "./Rmd_word_template.docx"
+        pandoc_args: "--highlight-style=tango"
+    html_document:
+        toc: true
+        toc_float: true
+    word_document:
+        reference_doc: "./Rmd_word_template.docx"
+        pandoc_args: "--highlight-style=tango"
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = FALSE, dev = "svg")
+```
+
+# アンクル・サムについて
+
+出典: [アンクル・サム - Wikipedia](https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%B3%E3%82%AF%E3%83%AB%E3%83%BB%E3%82%B5%E3%83%A0)
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.align="center"}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/J._M._Flagg%2C_I_Want_You_for_U.S._Army_poster_%281917%29.jpg/451px-J._M._Flagg%2C_I_Want_You_for_U.S._Army_poster_%281917%29.jpg")
+```
+
+
+## アンクル・サムの概要
+
+アンクル・サム（Uncle Sam）は、アメリカ合衆国政府を擬人化したキャラクター。また、一般的にアメリカ自体をさすこともある。
+
+新聞の政治風刺漫画などでは、自由の女神像とともにアメリカの擬人化としてよく登場する。星柄のシルクハット・紺のジャケットに赤い蝶ネクタイ、紅白縦縞のズボンといった星条旗を意匠化した服装の白人として描かれる。頭文字はUnited States（アメリカ合衆国）と同じU・Sである。
+
+## 起源
+
+アンクル・サムの起源ははっきりしていないが、一般的に言い伝えられている説は以下のようなものである。
+
+米英戦争当時、アメリカ陸軍に納入している精肉業者にニューヨーク州トロイのサミュエル・ウィルソンという人物がおり、「アンクル・サム」と呼ばれて兵士から親しまれていた。ウィルソンは、納入する肉の樽に「U.S.（United States）」の焼印を押していたが、兵士達は「アンクル・サムの略だ」と冗談を言っていた。そこから、アメリカ合衆国を「アンクル・サム」と呼ぶようになった。
+
+...
+
+
+# 数式の課題
+
+標準偏差は、以下の式で定義される。
+
+$$
+s = \sqrt{\frac{1}{n - 1}\sum_{i = 1}^{n} (x_{i} - \bar{x})^{2}}
+$$
+
+
+# グラフィックスの課題
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+par(family = "IPAexGothic") # 文字化け対策
+vec <- rnorm(100)
+hist(vec)
+```
