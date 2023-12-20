@@ -45,7 +45,7 @@
 1. Rによる統計モデリング、機械学習の基礎: [教材PDF](./09_stats_ml/09_stats_ml_lecture_note.pdf) / [ハンズオン環境](https://posit.cloud/content/7222568)
 1. 機械学習フレームワークによる機械学習 (1): [教材PDF](./10_ml_framework_01/10_ml_framework_01_lecture_note.pdf) / [ハンズオン環境](https://posit.cloud/content/7223174)
 1. 機械学習フレームワークによる機械学習 (2): [教材PDF](./11_ml_framework_02/11_ml_framework_02_lecture_note.pdf) / [ハンズオン環境](https://posit.cloud/content/7223277)
-1. Rによるデータスクレイピング
+1. RによるWebスクレイピング: [教材PDF](./12_scraping/12_scraping_lecture_note.pdf) / [ハンズオン環境](https://posit.cloud/content/7285996)
 1. 日本語テキストマイニング (1)
 1. 日本語テキストマイニング (2)
 1. Shinyによるアプリケーション開発 / reticulateによるPythonとの連携 / まとめ
