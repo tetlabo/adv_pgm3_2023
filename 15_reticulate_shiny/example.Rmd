@@ -1,0 +1,163 @@
+---
+author: 名前
+title: テスト
+output:
+  flexdashboard::flex_dashboard:
+    theme: cosmo
+    social: null
+    source: null
+    navbar: []
+runtime: shiny
+---
+
+```{r i2dash-global-setup}
+# Deal with operation within a switchr environment
+if (any(grepl(pattern = ".switchr", x = .libPaths()))) {
+  switchr::switchrNoUnload(TRUE)
+}
+
+# Make it possible to reuse chunk labels
+options(knitr.duplicate.label = "allow")
+
+# Set datadir variable, components should fetch their env from here!
+datadir <- "C:/Users/tanak/OneDrive - LTL/mana.bi/03_専修大学/2022_応用プログラミング3/01_教材/02_handson/15_reticulate_shiny"
+
+# Set up color mappings
+colormaps <- list()
+```
+
+ページ1 {.storyboard data-navmenu=""}
+====================================================
+
+<!-- Page created on 2023-01-17 14:21:04 -->
+
+### 
+
+<!-- Component created on 2023-01-17 14:19:08 -->
+
+```{r}
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop('The package "ggplot2" is needed to embed objects of class "gg".', call. = FALSE)
+}
+
+vis_obj_n0K8BN <- readRDS(file.path(datadir, 'obj_n0K8BN.rds'))
+
+# workaround for plotly dependencies issue (https://github.com/ropensci/plotly/issues/1044)
+# 
+fix_dependency <- function(dependency){
+    if(dependency$name == "jquery"){
+        dependency$src$file <- "lib/jquery"
+        dependency$package <- "crosstalk"
+    }
+    if(dependency$name == "crosstalk"){
+        dependency$src$file <- "www"
+        dependency$package <- "crosstalk"
+    }
+    return(dependency)
+}
+if ("ggplot2" == "plotly"){
+  vis_obj_n0K8BN$dependencies <- lapply(vis_obj_n0K8BN$dependencies, fix_dependency)  
+}
+
+vis_obj_n0K8BN
+```
+
+### 
+
+<!-- Component created on 2023-01-17 14:19:56 -->
+
+```{r}
+if (!requireNamespace("DT", quietly = TRUE)) {
+    stop('The package "DT" is needed to embed objects of class "datatables".', call. = FALSE)
+}
+
+vis_obj_mPcA2r <- readRDS(file.path(datadir, 'obj_mPcA2r.rds'))
+
+# workaround for plotly dependencies issue (https://github.com/ropensci/plotly/issues/1044)
+# 
+fix_dependency <- function(dependency){
+    if(dependency$name == "jquery"){
+        dependency$src$file <- "lib/jquery"
+        dependency$package <- "crosstalk"
+    }
+    if(dependency$name == "crosstalk"){
+        dependency$src$file <- "www"
+        dependency$package <- "crosstalk"
+    }
+    return(dependency)
+}
+if ("DT" == "plotly"){
+  vis_obj_mPcA2r$dependencies <- lapply(vis_obj_mPcA2r$dependencies, fix_dependency)  
+}
+
+vis_obj_mPcA2r
+```
+
+
+リスト1 {data-navmenu="リスト"}
+====================================================
+
+<!-- Page created on 2023-01-17 14:21:04 -->
+
+
+Column {data-width=600}
+-------------------------------------
+    
+### 
+
+<!-- Component created on 2023-01-17 14:21:03 -->
+
+```{r}
+if (!requireNamespace("leaflet", quietly = TRUE)) {
+    stop('The package "leaflet" is needed to embed objects of class "leaflet".', call. = FALSE)
+}
+
+vis_obj_r7ZRV9 <- readRDS(file.path(datadir, 'obj_r7ZRV9.rds'))
+
+# workaround for plotly dependencies issue (https://github.com/ropensci/plotly/issues/1044)
+# 
+fix_dependency <- function(dependency){
+    if(dependency$name == "jquery"){
+        dependency$src$file <- "lib/jquery"
+        dependency$package <- "crosstalk"
+    }
+    if(dependency$name == "crosstalk"){
+        dependency$src$file <- "www"
+        dependency$package <- "crosstalk"
+    }
+    return(dependency)
+}
+if ("leaflet" == "plotly"){
+  vis_obj_r7ZRV9$dependencies <- lapply(vis_obj_r7ZRV9$dependencies, fix_dependency)  
+}
+
+vis_obj_r7ZRV9
+```
+
+
+   
+Column {data-width=400}
+-------------------------------------
+   
+
+
+
+
+リスト2 {data-navmenu="リスト"}
+====================================================
+
+<!-- Page created on 2023-01-17 14:21:04 -->
+
+
+Column {data-width=600}
+-------------------------------------
+    
+
+   
+Column {data-width=400}
+-------------------------------------
+   
+
+
+
+

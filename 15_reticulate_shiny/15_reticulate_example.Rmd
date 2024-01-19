@@ -1,0 +1,48 @@
+---
+title: "reticulateパッケージのサンプル"
+date: "`r format(Sys.time(),'%Y-%m-%d')`"
+output:
+    html_document:
+        toc: true
+        toc_float: true
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = FALSE, dev = "svg")
+
+library(lubridate)
+library(scales)
+library(tidyverse)
+library(ggthemes)
+options(dplyr.width = Inf, scipen = 1, digits = 4)
+theme_set(theme_fivethirtyeight(base_family = "UDEV Gothic 35JPDOC", base_size = 18))
+theme_update(axis.title = element_text())
+```
+
+## 2.2　R MarkdownでPythonを使う
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+library(reticulate)
+```
+
+```{python eval=TRUE, message=FALSE, warning=FALSE, verbatim=TRUE}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+n = np.random.randn(100)
+df = pd.DataFrame({'n': n})
+df.hist();
+plt.show()
+```
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+df <- py$df
+ggplot(df, aes(x = n)) + geom_histogram()
+```
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+library(flextable)
+flextable(head(df, 5))
+```
